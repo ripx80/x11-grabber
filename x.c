@@ -168,10 +168,8 @@ Window *winlist (Display *disp, unsigned long *len) {
 		perror("winlist() -- GetWinProp");
 		return 0;
 	}
-	
 	return (Window*)list;
 }
-
 
 char *winame (Display *disp, Window win) {
 	Atom prop = XInternAtom(disp,"WM_NAME",False), type;
@@ -185,10 +183,8 @@ char *winame (Display *disp, Window win) {
 		perror("winlist() -- GetWinProp");
 		return NULL;
 	}
-
 	return (char*)list;
 }
-
 
 void print_named_tree(Display *display, Window *list, long unsigned len){
     char *name;
@@ -220,7 +216,6 @@ void print_named_tree(Display *display, Window *list, long unsigned len){
 Display* get_def_dpl(){
     Display* display;
     display = XOpenDisplay(":0.0");
-        
     if(display == NULL) {
         fprintf(stderr, "cannot connect to X server %s\n",getenv("DISPLAY") ? getenv("DISPLAY") : "(default)");
         exit(1);
@@ -238,21 +233,15 @@ int take_screenshot(struct xwin cwin, const char* filename){
     cwin.gcv.function = GXcopy;    
     cwin.gcv.subwindow_mode = IncludeInferiors;
     cwin.gc = XCreateGC (cwin.display, cwin.window, GCFunction | GCSubwindowMode, &cwin.gcv);
-    debug("Have build the pixmap...\n");
-
+    debug("build the pixmap...\n");
 
     cwin.pixmap = XCreatePixmap(cwin.display, cwin.window, cwin.attr.width, cwin.attr.height, cwin.attr.depth);
-    
     XSetForeground(cwin.display, cwin.gc, BlackPixelOfScreen(DefaultScreenOfDisplay(cwin.display)));
     XFillRectangle(cwin.display, cwin.pixmap, cwin.gc, 0, 0, cwin.attr.width, cwin.attr.height);
     XCopyArea(cwin.display, cwin.window, cwin.pixmap, cwin.gc, 0, 0, cwin.attr.width, cwin.attr.height, 0, 0);
-    
     //img = XGetImage(cwin.display, cwin.pixmap, 0, 0, cwin.attr.width, cwin.attr.height,AllPlanes, ZPixmap);
     img = XGetImage(cwin.display, cwin.pixmap, 0, 0, cwin.attr.width, cwin.attr.height,AllPlanes, XYPixmap);
-    
-    
     XFreePixmap(cwin.display,cwin.pixmap);
-    
     
     if(!img){
         fprintf(stderr, "Can't create ximage\n");
@@ -265,8 +254,7 @@ int take_screenshot(struct xwin cwin, const char* filename){
     if(write_jpeg(img, filename)){
         printf("JPEG file successfully written to %s\n",filename);
     }    
-    XDestroyImage(img);    
-    
+    XDestroyImage(img);
     return 0;   
 }
 
@@ -276,8 +264,7 @@ void * SeperateWindowShot(void *context){
     pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     struct ptargs *args = context;
 
-    XEvent event;   
-    
+    XEvent event;
     struct xwin cwin;
     cwin.window = *args->win;
     cwin.display= args->display;    
@@ -287,7 +274,6 @@ void * SeperateWindowShot(void *context){
         SubstructureNotifyMask|
         SubstructureRedirectMask|
         VisibilityChangeMask
-    
     ));        
     //XMapWindow(cwin.display, cwin.window);
     
@@ -331,12 +317,9 @@ void * SeperateWindowShot(void *context){
     pthread_mutex_unlock (&mutex);
     return NULL;
 }
-
-
 /* ** End X Functions ** */
 
 /* ** Begin Helper Functions ** */
-
 void print_help(char *name){
     printf("\n");
     printf("usage: %s [options] -f <filname>\n\n",name);    
@@ -347,7 +330,6 @@ void print_help(char *name){
     printf("\t[ -v [0|1|2] ]\t verbose\n");
     printf("\n");    
 }
-
 
 Window get_screenshot_mode(Display* display, int screen,int mode){    
     Window win;
@@ -371,22 +353,19 @@ Window get_screenshot_mode(Display* display, int screen,int mode){
     return win;    
 }
 
-
 int w2pid(Window win,Display * display, unsigned long pid){   
     Atom           type;
     int            format;
     unsigned long  nItems;
     unsigned long  bytesAfter;
     unsigned char *propPID = 0;
-  
     display = get_def_dpl();
     
     Atom pid_atom = XInternAtom(display,"_NET_WM_PID",False);
     if (pid_atom == None){
          printf("Error: No Such Atom\n");
     }
-     
-     
+    
     if(Success == XGetWindowProperty(display, win, pid_atom, 0, 1, False, XA_CARDINAL,
                                      &type, &format, &nItems, &bytesAfter, &propPID)){
         if(propPID != 0){
@@ -398,7 +377,6 @@ int w2pid(Window win,Display * display, unsigned long pid){
                 debug("Not Window: %d, pid: %d, prop_id: %d\n",win,pid,*((unsigned long *)propPID));
                 return 0;
             }
-
             XFree(propPID);
         }
     }else{
@@ -417,17 +395,12 @@ int w2pid(Window win,Display * display, unsigned long pid){
             //~ if(w2pid(wChild[i],display,pid) != 0)
                 //~ return 1;
         //~ }
-    //~ }    
-     
+    //~ }
 }
-
-
 /* ** End Helper Functions ** */
 
 int main(int argc, char **argv) {
-    
     setlocale(LC_ALL, "");
-    
     uint8_t delay = 0;
     uint8_t mode = 0;
     uint8_t fmt = 0; //0 = jpg, 1 = raw
@@ -442,16 +415,12 @@ int main(int argc, char **argv) {
     int pid=0;
     int uwait=0;
     opterr = 0;
-    
-    
 
     if(argc < 2){
         printf("to less arguments, you need a output file\n");
         print_help(argv[0]);
         exit(1);
     }
-        
-
     while ((c = getopt (argc, argv, "uid:p:m:s:v:f:")) != -1){
         switch (c){
             case 'd':
@@ -498,7 +467,6 @@ int main(int argc, char **argv) {
         return 1;
     }
     
-    
     if(strlen(filename) == 0){
         printf("No output file. go exit\n");
         exit(1);
@@ -506,12 +474,9 @@ int main(int argc, char **argv) {
     
     debug("delay = %d, mode = %d, fmt = %s, debug = %d, filename = %s\n",
           delay, mode, fmt,DEBUG,filename);
-          
     
     debug("Begin delay...");
     sleep(delay);
-          
-    
     //init vars
 /* --------------------------------------------------*/
     struct xwin xroot,cwin;
@@ -528,28 +493,21 @@ int main(int argc, char **argv) {
     cwin.display = xroot.display;
     debug("Root Window %d on Display: %d",xroot.window,xroot.display);
 
-
     //switch the screenshot mode
-    
     switch(mode){
         case 1:{
-            debug("[*] Mode: focused screen shot\n");            
-            
+            debug("[*] Mode: focused screen shot\n");
             cwin.window = get_focus_window(xroot.display);            
-            XGetWindowAttributes(cwin.display, cwin.window, &cwin.attr);      
-            
+            XGetWindowAttributes(cwin.display, cwin.window, &cwin.attr); 
             take_screenshot(cwin,filename);
-            
             //win = get_top_window(display, win);
             //win = get_named_window(display, win);
         }
         break;
         case 2:{
-            debug("[*] Mode: Shot them all!\n");                             
-            
+            debug("[*] Mode: Shot them all!\n"); 
             // Make Screenshots of all Windows... Unmapped must wait
             /* --------------------------------------------------*/
-                    
                 xlist.list = winlist(xroot.display,&xlist.len);
                 print_named_tree(xroot.display,xlist.list,xlist.len);
                 
@@ -560,7 +518,6 @@ int main(int argc, char **argv) {
                 int i;    
                
                 for (i=0; (i < xlist.len) || (i > (winc-1));i++) {    
-                       
                     struct xwin cwin;
                     cwin.window = xlist.list[i];
                     XGetWindowAttributes(xroot.display, cwin.window, &cwin.attr);
@@ -582,11 +539,9 @@ int main(int argc, char **argv) {
                 debug("Unmapped Windows %d: \n",ulen);
                 if(uwait==0){
                     debug("Not waiting for unmapped windows use -u to wait...\n");
-                    
                 }else{                   
                     // X Event Watcher
                     /* --------------------------------------------------*/    
-
                     pthread_mutex_t mutex;
                     pthread_t worker[10]; //worker list
                     struct ptargs args[10]; //worker args                     
@@ -602,24 +557,20 @@ int main(int argc, char **argv) {
                         
                         pthread_create(&(worker[i]), NULL, SeperateWindowShot, (void *)&args[i]);        
                         pthread_detach(worker[i]);
-
                     }    
                     while(shot_all != ulen){     
                         sleep(2);
                     }
-            }
+            	}
             }         
         break;
-        case 3:{       
-        
+        case 3:{
             debug("Mode: Process Shot");
             xlist.list = winlist(xroot.display,&xlist.len);
             const int winc = 50;
             Window * ptr[winc]; 
             unsigned int ulen=0;
-            
             int wi,i = 0;    
-           
             //double code... optimize that...
             for (i=0; (i < xlist.len) || (i > (winc-1));i++) {
                 struct xwin cwin;
@@ -656,10 +607,8 @@ int main(int argc, char **argv) {
                     }
                     break;
                 }
-                
             }
-            if(wi==0) warn("Canott found Window with pid: %d",pid);           
-           
+            if(wi==0) warn("Canott found Window with pid: %d",pid);
         }break;
         //comming soon.. 
         //~ case 4:{
@@ -683,8 +632,6 @@ int main(int argc, char **argv) {
         }
         break;        
     }
-
     //window_info(display,win,attrs,screen);
-       
     return 0;
 }
