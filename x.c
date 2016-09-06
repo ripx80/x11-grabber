@@ -1,24 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 #include <string.h>
 #include <ctype.h>
 #include <stdint.h>
-
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <errno.h>
-
 #include <locale.h>
-
 #include "std_fun.c"
 #include "jpeg.c"
-
 #include <pthread.h>
-
-
 /*
  * [-- Module Info --]
  * 
@@ -29,9 +22,7 @@
  *  | | \ \| | |_) >  <| (_) | |_| |
  *  |_|  \_\_| .__/_/\_\\___/ \___/ 
  *           | |                    
- *           |_|                 
- *  
- * 
+ *           |_|         
  * Name: X11 Module
  * ID:
  * Author: Ripx80
