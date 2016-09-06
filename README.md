@@ -10,11 +10,11 @@ gcc -o x -lX11 -ljpeg -lXmu -pthread x.c
 get window informations
 get screen informations
 Screenshots
-    * take full screenshot
-    * take focused screenshot
-    * take from all Windows (seperate)
-    * take screenshot from pid
-        * Child processes not supported
+ * take full screenshot
+ * take focused screenshot
+ * take from all Windows (seperate)
+ * take screenshot from pid
+ * Child processes not supported
 
 ### Comming Soon 
  * Keylogging
