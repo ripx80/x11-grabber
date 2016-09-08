@@ -179,7 +179,8 @@ char *winame (Display *disp, Window win) {
 
 void print_named_tree(Display *display, Window *list, long unsigned len){
     char *name;
-    for (int i=0;i<len;i++) {
+    int i;
+    for (i=0;i<len;i++) {
         name = winame(display,list[i]);
         printf("-->%s<--\n",name);
         free(name);
@@ -216,8 +217,8 @@ Display* get_def_dpl(){
 
 
 int take_screenshot(struct xwin cwin, const char* filename){
-    printf("Taking screenshot now on Window: %d, display:%d screen: %d, x: %d y: %d depth:%d Colormap: %d,Screen: %d Root: %d Visual: %d\n",    
-    cwin.window,cwin.display,cwin.attr.screen,cwin.attr.x,cwin.attr.y,cwin.attr.depth,cwin.attr.colormap,cwin.attr.screen,cwin.attr.root,cwin.attr.visual);
+    //printf("Taking screenshot now on Window: %d, display:%d screen: %d, x: %d y: %d depth:%d Colormap: %d,Screen: %d Root: %d Visual: %d\n",    
+    //cwin.window,cwin.display,cwin.attr.screen,cwin.attr.x,cwin.attr.y,cwin.attr.depth,cwin.attr.colormap,cwin.attr.screen,cwin.attr.root,cwin.attr.visual);
     XImage* img;
     unsigned int buffer_size;
     
@@ -274,7 +275,7 @@ void * SeperateWindowShot(void *context){
     
     //must use delays to wait for rendering on multiple virtual desktops...
     while(wait_shot){
-        printf("waiting for event on Window: %d\n",cwin.window);        
+        //printf("waiting for event on Window: %d\n",cwin.window);        
         //XPeekEvent(cwin.display, &event);
         XNextEvent(cwin.display, &event);
         switch(event.type){
