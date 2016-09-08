@@ -1,9 +1,14 @@
 # x11-grabber
 C implementation to get screenshots of mapped and unmapped X11 Windows and you can shot windows by their pid.
 
+### Requirements
+
+libjpeg (tested: libjpeg-turbo 1.5.0-1)
+libxmu  (tested: libxmu 1.1.2-1)
+libx11  (tested: libx11 1.6.3-1)
+
 ### Build Info
 gcc -o x -lX11 -ljpeg -lXmu -pthread x.c
-
 
 ### Functions 
 
